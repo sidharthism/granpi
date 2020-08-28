@@ -619,17 +619,19 @@ function fnPlayNote(note, octave) {
 }
 
 function fnRemoveKeyBinding(e) {
-	var keyCode = e.keyCode | e;
+	var keyCode = e.keyCode | e; 
     var i = keysPressed.length;
     while (i--) {
-      if (keyNotes[keyCode] && keysPressed[i] == keyCode) {
-		  var k = keyNotes[keyCode];
+      if (keysPressed[i] == keyCode) {
+	    if(keyNotes[keyCode]) {
+	      var k = keyNotes[keyCode];
           var key = visualKeyboard.querySelector(`div[note = "${k}"]`);
 	      key.style.backgroundColor = "";
 	      key.style.marginTop = "";
 	      key.style.boxShadow = "";    
+	    }
+	    keysPressed.splice(i, 1);
 	  }
-	  keysPressed.splice(i, 1);
     }
   };
   
@@ -647,11 +649,11 @@ function fnPlayPiano(e) {
 	    key.style.backgroundColor = pressColor;
 	    key.style.marginTop = "5px";
 	    key.style.boxShadow = "none";
+	    var arrPlayNote = k.split(",");
+        var note = arrPlayNote[0];
+        var octaveModifier = arrPlayNote[1] | 0;
+	    fnPlayNote(note, octave + octaveModifier);
 	}else return false;
-	var arrPlayNote = k.split(",");
-    var note = arrPlayNote[0];
-    var octaveModifier = arrPlayNote[1] | 0;
-    fnPlayNote(note, octave + octaveModifier);
 }
 
 function getKeyByValue(object, value) {
@@ -660,12 +662,6 @@ function getKeyByValue(object, value) {
 
 export default {
   name: "KeyBoard",
-  data() {
-    return {
-    isMobile: false,
-    evtListener: [],
-    }
-  },
   components: {
     KeyWhite,
     KeyBlack
